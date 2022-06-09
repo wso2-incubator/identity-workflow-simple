@@ -1,5 +1,8 @@
 package org.wso2.carbon.identity.workflow.engine.dao;
 
+/**
+ * Perform CRUD operations for workflow Event Request properties.
+ */
 public interface WorkflowEventRequestDAO {
 
     /**
@@ -63,4 +66,44 @@ public interface WorkflowEventRequestDAO {
      * @param currentStep the current step.
      */
     void updateStateOfRequest(String eventId, String workflowId, int currentStep);
+
+    /**
+     * Returns the workflow ID given the task ID.
+     *
+     * @param taskId random generated unique Id.
+     * @return workflow ID.
+     */
+    String getWorkflowID(String taskId);
+
+    /**
+     * Returns the request ID given the task ID.
+     *
+     * @param taskId random generated unique Id.
+     * @return request Id.
+     */
+    String getRequestID(String taskId);
+
+    /**
+     * Returns the initiator  given the request ID.
+     *
+     * @param requestId the request ID that need to be checked.
+     * @return string initiator.
+     */
+    String getInitiatedUser(String requestId);
+
+    /**
+     * Returns the status of request given the request ID.
+     *
+     * @param requestId the request ID that need to be checked.
+     * @return string status of request.
+     */
+    String getStatusOfRequest(String requestId);
+
+    /**
+     * Returns the entity name given the request ID.
+     *
+     * @param requestId the request ID that need to be checked.
+     * @return string entity name.
+     */
+    String getEntityName(String requestId);
 }

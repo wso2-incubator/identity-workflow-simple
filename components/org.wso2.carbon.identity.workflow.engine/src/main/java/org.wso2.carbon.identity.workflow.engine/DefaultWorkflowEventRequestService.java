@@ -17,12 +17,18 @@ import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 import org.wso2.carbon.identity.workflow.mgt.exception.InternalWorkflowException;
 import org.wso2.carbon.identity.workflow.mgt.exception.WorkflowException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Default Workflow Event Request service implementation.
+ */
 public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventRequest {
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void addApproversOfRequests(WorkflowRequest request, List<Parameter> parameterList) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
@@ -47,21 +53,13 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
                         approverType = stepName[stepName.length - 1];
 
                         String approver = parameter.getParamValue();
-                        String[] approvers = approver.split(",");
-                        if (approvers != null) {
-                            List<String> approverList = Collections.singletonList(approver);
-                            String stepValue = WorkflowEngineConstants.ParameterName.USER_AND_ROLE_STEP + "-step-" +
-                                    currentStepValue + "-users";
-                            if (stepValue.equals(parameter.getqName())) {
-                                for (String name : approverList) {
+                        if (approver != null && !approver.isEmpty()) {
+                            String[] approvers = approver.split("[,]", 0);
+                            if (approvers != null) {
+                                for (String name : approvers) {
                                     approverName = name;
-                                }
-                            }
-                            stepValue = WorkflowEngineConstants.ParameterName.USER_AND_ROLE_STEP + "-step-" +
-                                    currentStepValue + "-roles";
-                            if (stepValue.equals(parameter.getqName())) {
-                                for (String name : approverList) {
-                                    approverName = name;
+                                    workflowEventRequestDAO.addApproversOfRequest(taskId, eventId, workflowId,
+                                            approverType, approverName);
                                 }
                             }
                         }
@@ -69,7 +67,6 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
                 }
             }
         }
-        workflowEventRequestDAO.addApproversOfRequest(taskId, eventId, workflowId, approverType, approverName);
     }
 
     private String getRequestId(WorkflowRequest request) {
@@ -85,6 +82,10 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
         return (String) event;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getWorkflowId(WorkflowRequest request) {
 
         WorkflowManagementService workflowManagementService = new WorkflowManagementServiceImpl();
@@ -102,6 +103,10 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
         return workflowId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<WorkflowAssociation> getAssociations(WorkflowRequest workflowRequest) {
 
         List<WorkflowAssociation> associations;
@@ -115,30 +120,50 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
         return associations;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getApprovalOfRequest(String eventId) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
         return workflowEventRequestDAO.getApproversOfRequest(eventId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void deleteApprovalOfRequest(String taskId) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
         workflowEventRequestDAO.deleteApproversOfRequest(taskId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void createStatesOfRequest(String eventId, String workflowId, int currentStep) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
         workflowEventRequestDAO.createStatesOfRequest(eventId, workflowId, currentStep);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int getStateOfRequest(String eventId, String workflowId) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
         return workflowEventRequestDAO.getStateOfRequest(eventId, workflowId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void updateStateOfRequest(String eventId, String workflowId) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();

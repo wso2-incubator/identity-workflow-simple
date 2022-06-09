@@ -6,6 +6,9 @@ import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 
 import java.util.List;
 
+/**
+ * Default Workflow Event Request service interface.
+ */
 public interface DefaultWorkflowEventRequest {
 
     /**

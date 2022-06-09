@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Identity Workflow Simple Module</name>
     <description>
-
     </description>
     <url>http://wso2.org</url>
 
@@ -30,7 +29,6 @@
     <modules>
         <module>components/org.wso2.carbon.identity.workflow.engine</module>
     </modules>
-
 
     <build>
         <plugins>
@@ -109,7 +107,6 @@
             <artifactId>org.wso2.carbon.user.mgt.common</artifactId>
             <version>${carbon.identity.framework.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.user.mgt</artifactId>
@@ -130,7 +127,6 @@
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
             <version>${apache.felix.scr.ds.annotations.version}</version>
         </dependency>
-
     </dependencies>
 
 </dependencyManagement>
@@ -143,5 +139,4 @@
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <apache.felix.scr.ds.annotations.version>1.2.8</apache.felix.scr.ds.annotations.version>
     </properties>
-
 </project>

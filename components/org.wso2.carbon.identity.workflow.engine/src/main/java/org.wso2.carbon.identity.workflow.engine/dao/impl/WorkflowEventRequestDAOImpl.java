@@ -9,14 +9,27 @@ import org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
 import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.APPROVER_NAME_COLUMN;
+import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.CREATED_BY_COLUMN;
 import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.CURRENT_STEP_COLUMN;
+import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.ENTITY_NAME_COLUMN;
+import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.REQUEST_ID_COLUMN;
+import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.STATUS_COLUMN;
 import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.SqlQueries.ADD_CURRENT_STEP_FOR_EVENT;
 import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.TASK_ID_COLUMN;
+import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.WORKFLOW_ID_COLUMN;
 
+/**
+ * Workflow Event Request DAO implementation.
+ */
 public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public String addApproversOfRequest(String taskId, String eventId, String workflowId, String approverType,
                                         String approverName) {
@@ -39,6 +52,9 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         return taskId;
     }
 
+    /**
+     *{@inheritDoc}
+     */
     public String getApproversOfRequest(String eventId) {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
@@ -60,6 +76,9 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         return taskIdExists;
     }
 
+    /**
+     *{@inheritDoc}
+     */
     public void deleteApproversOfRequest(String taskId) {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
@@ -72,6 +91,9 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         }
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void createStatesOfRequest(String eventId, String workflowId, int currentStep) {
 
@@ -90,6 +112,9 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         }
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public int getStateOfRequest(String eventId, String workflowId) {
 
@@ -114,6 +139,9 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         return Integer.parseInt(stepExists);
     }
 
+    /**
+     *{@inheritDoc}
+     */
     public void updateStateOfRequest(String eventId, String workflowId, int currentStep) {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
@@ -132,15 +160,18 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         }
     }
 
+    /**
+     *{@inheritDoc}
+     */
     public String getApproversOfCurrentStep(String eventId) {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
         String approverName;
         try {
-            approverName = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
-                            GET_APPROVER_NAME_RELATED_TO_CURRENT_STEP,
-                    ((resultSet, i) -> (
-                            resultSet.getString(APPROVER_NAME_COLUMN))),
+           approverName= jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
+                   GET_APPROVER_NAME_RELATED_TO_CURRENT_STEP,
+                   ((resultSet, i) -> (
+                   resultSet.getString(APPROVER_NAME_COLUMN))),
                     preparedStatement -> preparedStatement.setString(1, eventId));
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving currentStep from" +
@@ -148,6 +179,111 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
             throw new WorkflowEngineRuntimeException(errorMessage);
         }
         return approverName;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    public String getWorkflowID(String taskId) {
+
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+        String workflowId;
+        try {
+            workflowId = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
+                            GET_WORKFLOW_ID,
+                    ((resultSet, i) -> (
+                            resultSet.getString(WORKFLOW_ID_COLUMN))),
+                    preparedStatement -> preparedStatement.setString(1, taskId));
+        } catch (DataAccessException e) {
+            String errorMessage = String.format("Error occurred while retrieving currentStep from" +
+                    "task Id: %s", taskId);
+            throw new WorkflowEngineRuntimeException(errorMessage);
+        }
+        return workflowId;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    public String getRequestID(String taskId) {
+
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+        String requestId;
+        try {
+            requestId = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
+                            GET_REQUEST_ID,
+                    ((resultSet, i) -> (
+                            resultSet.getString(REQUEST_ID_COLUMN))),
+                    preparedStatement -> preparedStatement.setString(1, taskId));
+        } catch (DataAccessException e) {
+            String errorMessage = String.format("Error occurred while retrieving currentStep from" +
+                    "task Id: %s", taskId);
+            throw new WorkflowEngineRuntimeException(errorMessage);
+        }
+        return requestId;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    public String getInitiatedUser(String requestId) {
+
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+        String created_By;
+        try {
+            created_By = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
+                            GET_CREATED_USER,
+                    ((resultSet, i) -> (
+                            resultSet.getString(CREATED_BY_COLUMN))),
+                    preparedStatement -> preparedStatement.setString(1, requestId));
+        } catch (DataAccessException e) {
+            String errorMessage = String.format("Error occurred while retrieving currentStep from" +
+                    "request Id: %s", requestId);
+            throw new WorkflowEngineRuntimeException(errorMessage);
+        }
+        return created_By;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    public String getStatusOfRequest(String requestId) {
+
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+        String status;
+        try {
+            status = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
+                            GET_STATES_OF_REQUEST,
+                    ((resultSet, i) -> (
+                            resultSet.getString(STATUS_COLUMN))),
+                    preparedStatement -> preparedStatement.setString(1, requestId));
+        } catch (DataAccessException e) {
+            String errorMessage = String.format("Error occurred while retrieving currentStep from" +
+                    "request Id: %s", requestId);
+            throw new WorkflowEngineRuntimeException(errorMessage);
+        }
+        return status;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    public String getEntityName(String requestId) {
+
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+        String workflowId;
+        try {
+            workflowId = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
+                            GET_USER_DETAILS,
+                    ((resultSet, i) -> (
+                            resultSet.getString(ENTITY_NAME_COLUMN))),
+                    preparedStatement -> preparedStatement.setString(1, requestId));
+        } catch (DataAccessException e) {
+            String errorMessage = String.format("Error occurred while retrieving currentStep from" +
+                    "request Id: %s", requestId);
+            throw new WorkflowEngineRuntimeException(errorMessage);
+        }
+        return workflowId;
     }
 
     private void setPreparedStatementForStateOfRequest(int currentStep, String eventId, String workflowId,

@@ -12,16 +12,27 @@ import org.wso2.carbon.identity.workflow.engine.DefaultWorkflowExecutor;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementService;
 import org.wso2.carbon.identity.workflow.mgt.workflow.AbstractWorkflow;
+import org.wso2.carbon.identity.workflow.mgt.workflow.TemplateInitializer;
 
+/**
+ * OSGi declarative services component which handles registration and un-registration of workflow engine management
+ * service.
+ */
 @Component(
         name = "org.wso2.carbon.identity.workflow.engine",
         immediate = true)
 public class WorkflowEngineServiceComponent {
+
+    /**
+     * Register Default Approval Workflow as an OSGi service.
+     *
+     * @param context OSGi service component context.
+     */
     @Activate
     protected void activate(ComponentContext context) {
 
         BundleContext bundleContext = context.getBundleContext();
-        bundleContext.registerService(AbstractWorkflow.class, new DefaultApprovalWorkflow(DefaultWorkflowExecutor.class,
+        bundleContext.registerService(AbstractWorkflow.class, new DefaultApprovalWorkflow(null, DefaultWorkflowExecutor.class,
                 getMetaDataXML()), null);
     }
 
@@ -60,6 +71,7 @@ public class WorkflowEngineServiceComponent {
     }
 
     protected void unsetWorkflowManagementService(WorkflowManagementService workflowManagementService) {
+
         WorkflowEngineServiceDataHolder.getInstance().setWorkflowManagementService(null);
     }
 
@@ -70,10 +82,12 @@ public class WorkflowEngineServiceComponent {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetWorkflowExecutorManagerService")
     protected void setWorkflowExecutorManagerService(WorkflowExecutorManagerService workflowExecutorManagerService) {
+
         WorkflowEngineServiceDataHolder.getInstance().setWorkflowExecutorManagerService(workflowExecutorManagerService);
     }
 
     protected void unsetWorkflowExecutorManagerService(WorkflowExecutorManagerService workflowExecutorManagerService) {
+
         WorkflowEngineServiceDataHolder.getInstance().setWorkflowExecutorManagerService(workflowExecutorManagerService);
     }
 }

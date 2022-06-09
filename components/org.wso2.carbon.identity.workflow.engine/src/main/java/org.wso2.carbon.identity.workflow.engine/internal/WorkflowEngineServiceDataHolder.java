@@ -7,6 +7,9 @@ import org.wso2.carbon.identity.workflow.mgt.workflow.AbstractWorkflow;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A class to keep the data of the workflow engine component.
+ */
 public class WorkflowEngineServiceDataHolder {
 
     private static WorkflowEngineServiceDataHolder instance = new WorkflowEngineServiceDataHolder();
@@ -25,11 +28,13 @@ public class WorkflowEngineServiceDataHolder {
     }
 
     public WorkflowManagementService getWorkflowManagementService() {
+
         return workflowManagementService;
     }
 
     public void setWorkflowManagementService(
             WorkflowManagementService workflowManagementService) {
+
         this.workflowManagementService = workflowManagementService;
     }
 
@@ -40,10 +45,14 @@ public class WorkflowEngineServiceDataHolder {
 
     public void setWorkflowExecutorManagerService(
             WorkflowExecutorManagerService workflowExecutorManagerService) {
+
         this.workflowExecutorManagerService = workflowExecutorManagerService;
     }
-    private Map<String, Map<String,AbstractWorkflow>> workflowImpls = new HashMap<String, Map<String,AbstractWorkflow>>();
+
+    private Map<String, Map<String, AbstractWorkflow>> workflowImpls = new HashMap<String, Map<String, AbstractWorkflow>>();
+
     public Map<String, Map<String, AbstractWorkflow>> getWorkflowImpls() {
+
         return workflowImpls;
     }
 }

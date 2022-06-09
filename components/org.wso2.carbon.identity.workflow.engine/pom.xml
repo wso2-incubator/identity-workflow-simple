@@ -10,7 +10,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-
     <artifactId>workflow.engine</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Workflow Engine Simple</name>
@@ -31,7 +30,6 @@
             <artifactId>org.wso2.carbon.user.mgt.common</artifactId>
             <version>5.18.187</version>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.user.mgt</artifactId>
@@ -52,12 +50,9 @@
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
             <version>${apache.felix.scr.ds.annotations.version}</version>
         </dependency>
-
     </dependencies>
 
-
     <repositories>
-
         <repository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
@@ -68,7 +63,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-
         <repository>
             <id>wso2.releases</id>
             <name>WSO2 internal Repository</name>
@@ -79,7 +73,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-
         <repository>
             <id>wso2.snapshots</id>
             <name>Apache Snapshot Repository</name>
@@ -92,7 +85,6 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-
     </repositories>
 
     <pluginRepositories>
@@ -106,7 +98,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </pluginRepository>
-
         <pluginRepository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
@@ -213,7 +204,6 @@
         </plugins>
     </build>
 
-
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -223,6 +213,4 @@
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <apache.felix.scr.ds.annotations.version>1.2.8</apache.felix.scr.ds.annotations.version>
     </properties>
-
-
 </project>
