@@ -173,4 +173,3 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
         workflowEventRequestDAO.updateStateOfRequest(eventId, workflowId, currentStep);
     }
 }
-

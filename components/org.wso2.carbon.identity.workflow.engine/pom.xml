@@ -213,4 +213,5 @@
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <apache.felix.scr.ds.annotations.version>1.2.8</apache.felix.scr.ds.annotations.version>
     </properties>
+
 </project>
