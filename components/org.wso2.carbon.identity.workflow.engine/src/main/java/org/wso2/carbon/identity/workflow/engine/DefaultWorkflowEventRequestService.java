@@ -1,7 +1,5 @@
 package org.wso2.carbon.identity.workflow.engine;
 
-import org.wso2.carbon.identity.workflow.engine.dao.WorkflowEventRequestDAO;
-import org.wso2.carbon.identity.workflow.engine.dao.impl.WorkflowEventRequestDAOImpl;
 import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineException;
 import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineRuntimeException;
 import org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants;
@@ -16,6 +14,8 @@ import org.wso2.carbon.identity.workflow.mgt.bean.WorkflowAssociation;
 import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 import org.wso2.carbon.identity.workflow.mgt.exception.InternalWorkflowException;
 import org.wso2.carbon.identity.workflow.mgt.exception.WorkflowException;
+import org.wso2.carbon.identity.workflow.engine.internal.dao.WorkflowEventRequestDAO;
+import org.wso2.carbon.identity.workflow.engine.internal.dao.impl.WorkflowEventRequestDAOImpl;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,8 +35,8 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
         String taskId = UUID.randomUUID().toString();
         String eventId = getRequestId(request);
         String workflowId = getWorkflowId(request);
-        String approverType = null;
-        String approverName = null;
+        String approverType;
+        String approverName;
         int currentStepValue = getStateOfRequest(eventId, workflowId);
         if (currentStepValue == 0) {
             createStatesOfRequest(eventId, workflowId, currentStepValue);
@@ -58,8 +58,9 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
                             if (approvers != null) {
                                 for (String name : approvers) {
                                     approverName = name;
+                                    String taskStatus= WorkflowEngineConstants.ParameterName.TASK_STATUS_DEFAULT;
                                     workflowEventRequestDAO.addApproversOfRequest(taskId, eventId, workflowId,
-                                            approverType, approverName);
+                                            approverType, approverName,taskStatus);
                                 }
                             }
                         }
@@ -126,7 +127,7 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public String getApprovalOfRequest(String eventId) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        WorkflowEventRequestDAO workflowEventRequestDAO=new WorkflowEventRequestDAOImpl();
         return workflowEventRequestDAO.getApproversOfRequest(eventId);
     }
 

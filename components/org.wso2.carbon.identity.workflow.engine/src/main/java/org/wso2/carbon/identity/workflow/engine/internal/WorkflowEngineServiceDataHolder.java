@@ -1,5 +1,6 @@
 package org.wso2.carbon.identity.workflow.engine.internal;
 
+import org.osgi.framework.BundleContext;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementService;
 import org.wso2.carbon.identity.workflow.mgt.workflow.AbstractWorkflow;
@@ -18,6 +19,8 @@ public class WorkflowEngineServiceDataHolder {
 
     private WorkflowExecutorManagerService workflowExecutorManagerService;
 
+    private BundleContext bundleContext;
+
     private WorkflowEngineServiceDataHolder() {
 
     }
@@ -30,6 +33,16 @@ public class WorkflowEngineServiceDataHolder {
     public WorkflowManagementService getWorkflowManagementService() {
 
         return workflowManagementService;
+    }
+
+    public BundleContext getBundleContext() {
+
+        return bundleContext;
+    }
+
+    public void setBundleContext(BundleContext bundleContext) {
+
+        this.bundleContext = bundleContext;
     }
 
     public void setWorkflowManagementService(

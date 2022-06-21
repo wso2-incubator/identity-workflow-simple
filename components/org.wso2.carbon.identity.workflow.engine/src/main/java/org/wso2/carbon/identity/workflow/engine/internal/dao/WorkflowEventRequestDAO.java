@@ -1,4 +1,4 @@
-package org.wso2.carbon.identity.workflow.engine.dao;
+package org.wso2.carbon.identity.workflow.engine.internal.dao;
 
 /**
  * Perform CRUD operations for workflow Event Request properties.
@@ -13,9 +13,10 @@ public interface WorkflowEventRequestDAO {
      * @param workflowId   workflow ID.
      * @param approverType the type of the approved user EX: user or Role.
      * @param approverName the value of the approver type.
+     * @param taskStatus   state of the tasks [RESERVED, READY or COMPLETED].
      * @return event ID.
      */
-    String addApproversOfRequest(String taskId, String eventId, String workflowId, String approverType, String approverName);
+    String addApproversOfRequest(String taskId, String eventId, String workflowId, String approverType, String approverName, String taskStatus);
 
     /**
      * Get taskId from table.
@@ -24,14 +25,6 @@ public interface WorkflowEventRequestDAO {
      * @return task Id.
      */
     String getApproversOfRequest(String eventId);
-
-    /**
-     * Get approverName related to currentStep.
-     *
-     * @param eventId the request ID that need to be checked.
-     * @return the value of the approver type.
-     */
-    String getApproversOfCurrentStep(String eventId);
 
     /**
      * Delete approver details using task Id.
@@ -66,44 +59,4 @@ public interface WorkflowEventRequestDAO {
      * @param currentStep the current step.
      */
     void updateStateOfRequest(String eventId, String workflowId, int currentStep);
-
-    /**
-     * Returns the workflow ID given the task ID.
-     *
-     * @param taskId random generated unique Id.
-     * @return workflow ID.
-     */
-    String getWorkflowID(String taskId);
-
-    /**
-     * Returns the request ID given the task ID.
-     *
-     * @param taskId random generated unique Id.
-     * @return request Id.
-     */
-    String getRequestID(String taskId);
-
-    /**
-     * Returns the initiator  given the request ID.
-     *
-     * @param requestId the request ID that need to be checked.
-     * @return string initiator.
-     */
-    String getInitiatedUser(String requestId);
-
-    /**
-     * Returns the status of request given the request ID.
-     *
-     * @param requestId the request ID that need to be checked.
-     * @return string status of request.
-     */
-    String getStatusOfRequest(String requestId);
-
-    /**
-     * Returns the entity name given the request ID.
-     *
-     * @param requestId the request ID that need to be checked.
-     * @return string entity name.
-     */
-    String getEntityName(String requestId);
 }

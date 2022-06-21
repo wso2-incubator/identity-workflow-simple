@@ -7,19 +7,19 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.identity.workflow.engine.ApprovalEventService;
 import org.wso2.carbon.identity.workflow.engine.DefaultApprovalWorkflow;
-import org.wso2.carbon.identity.workflow.engine.DefaultWorkflowExecutor;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementService;
 import org.wso2.carbon.identity.workflow.mgt.workflow.AbstractWorkflow;
-import org.wso2.carbon.identity.workflow.mgt.workflow.TemplateInitializer;
+import org.wso2.carbon.identity.workflow.engine.DefaultWorkflowExecutor;
 
 /**
  * OSGi declarative services component which handles registration and un-registration of workflow engine management
  * service.
  */
 @Component(
-        name = "org.wso2.carbon.identity.workflow.engine",
+        name = "simple.workflow.engine",
         immediate = true)
 public class WorkflowEngineServiceComponent {
 
@@ -32,15 +32,17 @@ public class WorkflowEngineServiceComponent {
     protected void activate(ComponentContext context) {
 
         BundleContext bundleContext = context.getBundleContext();
-        bundleContext.registerService(AbstractWorkflow.class, new DefaultApprovalWorkflow(null, DefaultWorkflowExecutor.class,
-                getMetaDataXML()), null);
+        bundleContext.registerService(AbstractWorkflow.class, new DefaultApprovalWorkflow(null,
+                DefaultWorkflowExecutor.class, getMetaDataXML()), null);
+        ApprovalEventService approvalEventService=new ApprovalEventService();
+        bundleContext.registerService(ApprovalEventService.class, approvalEventService, null);
     }
 
     private String getMetaDataXML() {
 
         return "<met:MetaData xmlns:met=\"http://metadata.bean.mgt.workflow.identity.carbon.wso2.org\">\n" +
                 "<met:WorkflowImpl>\n" +
-                "    <met:WorkflowImplId>newWorkflowImpl</met:WorkflowImplId>\n" +
+                "    <met:WorkflowImplId>workflowImplSimple</met:WorkflowImplId>\n" +
                 "    <met:WorkflowImplName>ApprovalWorkflow</met:WorkflowImplName>\n" +
                 "    <met:WorkflowImplDescription>Approval Workflow</met:WorkflowImplDescription>\n" +
                 "    <met:TemplateId>MultiStepApprovalTemplate</met:TemplateId>\n" +

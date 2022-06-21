@@ -16,7 +16,8 @@ import java.util.List;
  */
 public class DefaultApprovalWorkflow extends AbstractWorkflow {
 
-    public DefaultApprovalWorkflow(Class<? extends TemplateInitializer> templateInitializerClass, Class<? extends WorkFlowExecutor> workFlowExecutorClass, String metaDataXML)
+    public DefaultApprovalWorkflow(Class<? extends TemplateInitializer> templateInitializerClass, 
+                                   Class<? extends WorkFlowExecutor> workFlowExecutorClass, String metaDataXML)
             throws WorkflowRuntimeException {
 
         super(templateInitializerClass, workFlowExecutorClass, metaDataXML);
