@@ -1,5 +1,8 @@
 package org.wso2.carbon.identity.workflow.engine.internal.dao;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 /**
  * Perform CRUD operations for workflow Event Request properties.
  */
@@ -59,4 +62,100 @@ public interface WorkflowEventRequestDAO {
      * @param currentStep the current step.
      */
     void updateStateOfRequest(String eventId, String workflowId, int currentStep);
+
+    /**
+     * Returns the request ID given the task ID.
+     *
+     * @param taskId random generated unique Id.
+     * @return request Id.
+     */
+    String getRequestID(String taskId);
+
+    /**
+     * Returns the initiator given the request ID.
+     *
+     * @param requestId the request ID that need to be checked.
+     * @return string initiator.
+     */
+    String getInitiatedUser(String requestId);
+
+    /**
+     * Returns the events list given the authenticated approver name.
+     *
+     * @param approverName the approver name that need to be checked.
+     * @return requests list.
+     */
+    List<String> getRequestIdFromApprover(String approverName);
+
+    /**
+     * Returns the tasks list given the authenticated approver name.
+     *
+     * @param approverName the approver name that need to be checked.
+     * @return tasks list.
+     */
+    List<String> getTaskIdList(String approverName);
+
+    /**
+     * Returns the events list according to the admin.
+     *
+     * @param approverName admin user.
+     * @param name admin role.
+     * @return events list.
+     */
+    List<String> getRequestsFromAdmin(String approverName, String name);
+
+    /**
+     * Returns the event type given the request ID.
+     *
+     * @param requestId the request ID that need to be checked.
+     * @return event type of the request.
+     */
+    String getEventType(String requestId);
+
+    /**
+     * Returns the task status given the task ID [RESERVED, READY or COMPLETED].
+     *
+     * @param taskId the task ID that need to be checked.
+     * @return task Status.
+     */
+    String getTaskStatusOfRequest(String taskId);
+
+    /**
+     * Update the task status given the task ID.
+     *
+     * @param taskId the task ID that need to be checked.
+     * @param taskStatus state of the tasks [RESERVED, READY or COMPLETED].
+     */
+    void updateStatusOfRequest(String taskId, String taskStatus);
+
+    /**
+     * Returns the created time of the request.
+     *
+     * @param requestId the request ID that need to be checked.
+     * @return the created time.
+     */
+    Timestamp getCreatedAtTimeInMill(String requestId);
+
+    /**
+     * Returns the relationship ID given the request ID.
+     *
+     * @param eventId the event ID that need to be checked.
+     * @return the relationship ID.
+     */
+    String getRelationshipId(String eventId);
+
+    /**
+     * Returns the approvers list given the authenticated approver name.
+     *
+     * @param taskId the task ID that need to be checked.
+     * @return approvers list.
+     */
+    List<String> listApprovers(String taskId);
+    /**
+     * Get approverName related to currentStep.
+     *
+     * @param taskId the unique ID that need to be checked.
+     * @return the value of the approver type.
+     */
+    String getApproversOfCurrentStep(String taskId);
 }
