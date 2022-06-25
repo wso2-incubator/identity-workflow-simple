@@ -87,6 +87,10 @@ public interface WorkflowEventRequestDAO {
      */
     List<String> getRequestIdFromApprover(String approverName);
 
+    List<Integer> getRolesID(String userName);
+
+    List<String> getRoleNames(int roleId);
+
     /**
      * Returns the tasks list given the authenticated approver name.
      *
@@ -96,13 +100,12 @@ public interface WorkflowEventRequestDAO {
     List<String> getTaskIdList(String approverName);
 
     /**
-     * Returns the events list according to the admin.
+     * Returns the events list according to the user.
      *
      * @param approverName admin user.
-     * @param name admin role.
      * @return events list.
      */
-    List<String> getRequestsFromAdmin(String approverName, String name);
+    List<String> getRequestsList(String approverName);
 
     /**
      * Returns the event type given the request ID.
@@ -151,11 +154,13 @@ public interface WorkflowEventRequestDAO {
      * @return approvers list.
      */
     List<String> listApprovers(String taskId);
+
     /**
-     * Get approverName related to currentStep.
+     * Returns the task status given the request ID [RESERVED, READY or COMPLETED].
      *
-     * @param taskId the unique ID that need to be checked.
-     * @return the value of the approver type.
+     * @param requestId the request ID that need to be checked.
+     * @return task status.
      */
-    String getApproversOfCurrentStep(String taskId);
+    String getStatusOfTask(String requestId);
+    List<String> getTaskId(String eventId);
 }

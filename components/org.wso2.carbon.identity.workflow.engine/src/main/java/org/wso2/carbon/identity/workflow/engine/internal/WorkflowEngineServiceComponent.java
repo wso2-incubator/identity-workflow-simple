@@ -9,10 +9,11 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.identity.workflow.engine.ApprovalEventService;
 import org.wso2.carbon.identity.workflow.engine.DefaultApprovalWorkflow;
+import org.wso2.carbon.identity.workflow.engine.DefaultTemplateInitializer;
+import org.wso2.carbon.identity.workflow.engine.DefaultWorkflowExecutor;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementService;
 import org.wso2.carbon.identity.workflow.mgt.workflow.AbstractWorkflow;
-import org.wso2.carbon.identity.workflow.engine.DefaultWorkflowExecutor;
 
 /**
  * OSGi declarative services component which handles registration and un-registration of workflow engine management
@@ -32,7 +33,7 @@ public class WorkflowEngineServiceComponent {
     protected void activate(ComponentContext context) {
 
         BundleContext bundleContext = context.getBundleContext();
-        bundleContext.registerService(AbstractWorkflow.class, new DefaultApprovalWorkflow(null,
+        bundleContext.registerService(AbstractWorkflow.class, new DefaultApprovalWorkflow(DefaultTemplateInitializer.class,
                 DefaultWorkflowExecutor.class, getMetaDataXML()), null);
         ApprovalEventService approvalEventService=new ApprovalEventService();
         bundleContext.registerService(ApprovalEventService.class, approvalEventService, null);
@@ -43,12 +44,12 @@ public class WorkflowEngineServiceComponent {
         return "<met:MetaData xmlns:met=\"http://metadata.bean.mgt.workflow.identity.carbon.wso2.org\">\n" +
                 "<met:WorkflowImpl>\n" +
                 "    <met:WorkflowImplId>workflowImplSimple</met:WorkflowImplId>\n" +
-                "    <met:WorkflowImplName>ApprovalWorkflow</met:WorkflowImplName>\n" +
-                "    <met:WorkflowImplDescription>Approval Workflow</met:WorkflowImplDescription>\n" +
+                "    <met:WorkflowImplName>SimpleWorkflowEngine</met:WorkflowImplName>\n" +
+                "    <met:WorkflowImplDescription>Simple WorkflowEngine</met:WorkflowImplDescription>\n" +
                 "    <met:TemplateId>MultiStepApprovalTemplate</met:TemplateId>\n" +
                 "    <met:ParametersMetaData>\n" +
                 "        <met:ParameterMetaData Name=\"BPSProfile\" InputType=\"Select\" isRequired=\"true\" isInputDataRequired=\"true\">\n" +
-                "            <met:DisplayName>BPS Profile(Server Profile Name)</met:DisplayName>\n" +
+                "            <met:DisplayName>Profile(Server Profile Name)</met:DisplayName>\n" +
                 "        </met:ParameterMetaData>\n" +
                 "        <met:ParameterMetaData Name=\"HTSubject\" DataType=\"String\" InputType=\"Text\" isRequired=\"true\">\n" +
                 "            <met:DisplayName>Task Subject(Approval task subject to display)</met:DisplayName>\n" +
