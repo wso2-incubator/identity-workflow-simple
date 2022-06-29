@@ -23,5 +23,4 @@ public class TStatus {
 
         this.localTStatus = param;
     }
-
 }

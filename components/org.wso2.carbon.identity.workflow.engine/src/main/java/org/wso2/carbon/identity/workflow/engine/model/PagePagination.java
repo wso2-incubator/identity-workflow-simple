@@ -37,5 +37,4 @@ public class PagePagination {
         this.localPageNumberTracker = param != Integer.MIN_VALUE;
         this.localPageNumber = param;
     }
-
 }

@@ -94,9 +94,9 @@ public class ApprovalEventService {
         DefaultWorkflowEventRequest defaultWorkflowEventRequest = new DefaultWorkflowEventRequestService();
         List<String> allRequestsList = getAllRequestRelatedUserAndRole();
         List<TaskSummaryDTO> taskSummaryDTOList = new ArrayList<>();
-        for (String s : allRequestsList) {
+        for (String task : allRequestsList) {
             TaskSummaryDTO summeryDTO = new TaskSummaryDTO();
-            String eventId = getTaskRelatedStatus(s, status);
+            String eventId = getTaskRelatedStatus(task, status);
             if (eventId != null) {
                 WorkflowRequest request = getWorkflowRequest(eventId);
                 TaskDetails taskDetails = getTaskDetails(request);
