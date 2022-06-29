@@ -43,8 +43,6 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
         }
         currentStepValue += 1;
         updateStateOfRequest(eventId, workflowId);
-        List<WorkflowAssociation> associations = getAssociations(request);
-        for (WorkflowAssociation association : associations) {
             for (Parameter parameter : parameterList) {
                 if (parameter.getParamName().equals(WorkflowEngineConstants.ParameterName.USER_AND_ROLE_STEP)) {
                     String[] stepName = parameter.getqName().split("-");
@@ -54,20 +52,17 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
 
                         String approver = parameter.getParamValue();
                         if (approver != null && !approver.isEmpty()) {
-                            String[] approvers = approver.split("[,]", 0);
-                            if (approvers != null) {
-                                for (String name : approvers) {
-                                    approverName = name;
-                                    String taskStatus= WorkflowEngineConstants.ParameterName.TASK_STATUS_DEFAULT;
-                                    workflowEventRequestDAO.addApproversOfRequest(taskId, eventId, workflowId,
-                                            approverType, approverName,taskStatus);
-                                }
+                            String[] approvers = approver.split(",", 0);
+                            for (String name : approvers) {
+                                approverName = name;
+                                String taskStatus= WorkflowEngineConstants.ParameterName.TASK_STATUS_DEFAULT;
+                                workflowEventRequestDAO.addApproversOfRequest(taskId, eventId, workflowId,
+                                        approverType, approverName,taskStatus);
                             }
                         }
                     }
                 }
             }
-        }
     }
 
     private String getRequestId(WorkflowRequest request) {
@@ -91,16 +86,15 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
 
         WorkflowManagementService workflowManagementService = new WorkflowManagementServiceImpl();
         List<WorkflowAssociation> associations = getAssociations(request);
-        Workflow workflow = null;
-        String workflowId;
+        String workflowId = null;
         for (WorkflowAssociation association : associations) {
             try {
-                workflow = workflowManagementService.getWorkflow(association.getWorkflowId());
+              Workflow  workflow = workflowManagementService.getWorkflow(association.getWorkflowId());
+                workflowId = workflow.getWorkflowId();
             } catch (WorkflowException e) {
                 throw new WorkflowEngineException("The workflow Id is not valid");
             }
         }
-        workflowId = workflow.getWorkflowId();
         return workflowId;
     }
 
