@@ -13,7 +13,6 @@ import org.wso2.carbon.identity.workflow.mgt.workflow.WorkFlowExecutor;
 
 import java.util.List;
 
-import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.ParameterName.BPS_PROFILE;
 import static org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants.ParameterName.HT_SUBJECT;
 
 /**
@@ -37,15 +36,7 @@ public class DefaultApprovalWorkflow extends AbstractWorkflow {
         InputData inputData = null;
         if (parameterMetaData != null && parameterMetaData.getName() != null) {
             String parameterName = parameterMetaData.getName();
-            if (BPS_PROFILE.equals(parameterName)) {
-                inputData = new InputData();
-                MapType mapType = new MapType();
-                inputData.setMapType(mapType);
-                Item item = new Item();
-                item.setKey("embeded_bps");
-                item.setValue("embeded_bps");
-                mapType.setItem(new Item[]{item});
-            } else if (HT_SUBJECT.equals(parameterName)) {
+          if (HT_SUBJECT.equals(parameterName)) {
                 inputData = new InputData();
                 MapType mapType = new MapType();
                 inputData.setMapType(mapType);

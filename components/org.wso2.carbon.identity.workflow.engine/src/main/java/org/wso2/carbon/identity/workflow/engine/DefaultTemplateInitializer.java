@@ -17,7 +17,6 @@ public class DefaultTemplateInitializer implements TemplateInitializer {
 
     private String processName;
     private String htName;
-
     private String role;
     private String tenantContext = "" ;
     private static final String HT_SUFFIX = "Task";
