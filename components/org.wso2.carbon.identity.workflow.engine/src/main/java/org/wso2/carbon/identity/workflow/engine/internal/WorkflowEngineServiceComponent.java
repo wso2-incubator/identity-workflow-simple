@@ -47,14 +47,17 @@ public class WorkflowEngineServiceComponent {
                 "    <met:WorkflowImplDescription>Approval Workflow</met:WorkflowImplDescription>\n" +
                 "    <met:TemplateId>MultiStepApprovalTemplate</met:TemplateId>\n" +
                 "    <met:ParametersMetaData>\n" +
+<<<<<<< Updated upstream
                 "        <met:ParameterMetaData Name=\"BPSProfile\" InputType=\"Select\" isRequired=\"true\" isInputDataRequired=\"true\">\n" +
                 "            <met:DisplayName>BPS Profile(Server Profile Name)</met:DisplayName>\n" +
                 "        </met:ParameterMetaData>\n" +
+=======
+>>>>>>> Stashed changes
                 "        <met:ParameterMetaData Name=\"HTSubject\" DataType=\"String\" InputType=\"Text\" isRequired=\"true\">\n" +
-                "            <met:DisplayName>Task Subject(Approval task subject to display)</met:DisplayName>\n" +
+                "            <met:DisplayName>Subject(Approval task subject to display)</met:DisplayName>\n" +
                 "        </met:ParameterMetaData>\n" +
                 "        <met:ParameterMetaData Name=\"HTDescription\" DataType=\"String\" InputType=\"TextArea\">\n" +
-                "            <met:DisplayName>Task Detail(Approval task description)</met:DisplayName>\n" +
+                "            <met:DisplayName>Detail(Approval task description)</met:DisplayName>\n" +
                 "        </met:ParameterMetaData>\n" +
                 "    </met:ParametersMetaData>\n" +
                 "</met:WorkflowImpl>\n" +
