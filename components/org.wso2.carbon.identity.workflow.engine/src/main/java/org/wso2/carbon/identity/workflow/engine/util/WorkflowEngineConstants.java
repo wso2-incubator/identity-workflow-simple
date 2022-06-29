@@ -8,7 +8,7 @@ public class WorkflowEngineConstants {
     public static final String CURRENT_STEP_COLUMN = "CURRENT_STEP";
     public static final String TASK_ID_COLUMN = "TASK_ID";
     public static final String APPROVER_NAME_COLUMN = "APPROVER_NAME";
-    public static final String Event_ID_COLUMN = "EVENT_ID";
+    public static final String EVENT_ID = "EVENT_ID";
     public static final String CREATED_USER_COLUMN = "CREATED_BY";
     public static final String EVENT_TYPE_COLUMN = "OPERATION_TYPE";
     public static final String TASK_STATUS_COLUMN = "TASK_STATUS";
@@ -21,6 +21,7 @@ public class WorkflowEngineConstants {
 
         public static final String ADD_APPROVAL_LIST_RELATED_TO_USER = "INSERT INTO WF_WORKFLOW_APPROVAL_RELATION (TASK_ID,EVENT_ID,WORKFLOW_ID,APPROVER_TYPE,APPROVER_NAME, TASK_STATUS) VALUES (?,?,?,?,?,?)";
         public static final String GET_TASK_ID_RELATED_TO_USER = "SELECT DISTINCT TASK_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE EVENT_ID = ?";
+        public static final String GET_WORKFLOW_ID_RELATED_TO_TASK = "SELECT DISTINCT WORKFLOW_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE TASK_ID = ?";
         public static final String DELETE_APPROVAL_LIST_RELATED_TO_USER = "DELETE FROM WF_WORKFLOW_APPROVAL_RELATION WHERE TASK_ID=?";
         public static final String ADD_CURRENT_STEP_FOR_EVENT = "INSERT INTO WF_WORKFLOW_APPROVAL_STATE (EVENT_ID,WORKFLOW_ID, CURRENT_STEP) VALUES (?,?,?)";
         public static final String GET_CURRENT_STEP = "SELECT CURRENT_STEP FROM WF_WORKFLOW_APPROVAL_STATE WHERE EVENT_ID = ? AND WORKFLOW_ID = ?";

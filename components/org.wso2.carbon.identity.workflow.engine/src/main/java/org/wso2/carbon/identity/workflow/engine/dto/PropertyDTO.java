@@ -38,11 +38,11 @@ public class PropertyDTO {
     @Override
     public String toString() {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("class PropertyDTO {\n");
-        sb.append("  key: ").append(key).append("\n");
-        sb.append("  value: ").append(value).append("\n");
-        sb.append("}\n");
-        return sb.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("class PropertyDTO {\n");
+        builder.append("  key: ").append(key).append("\n");
+        builder.append("  value: ").append(value).append("\n");
+        builder.append("}\n");
+        return builder.toString();
     }
 }

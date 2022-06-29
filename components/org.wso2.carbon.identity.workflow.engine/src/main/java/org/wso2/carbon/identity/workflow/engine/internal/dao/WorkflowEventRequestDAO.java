@@ -17,9 +17,8 @@ public interface WorkflowEventRequestDAO {
      * @param approverType the type of the approved user EX: user or Role.
      * @param approverName the value of the approver type.
      * @param taskStatus   state of the tasks [RESERVED, READY or COMPLETED].
-     * @return event ID.
      */
-    String addApproversOfRequest(String taskId, String eventId, String workflowId, String approverType, String approverName, String taskStatus);
+    void addApproversOfRequest(String taskId, String eventId, String workflowId, String approverType, String approverName, String taskStatus);
 
     /**
      * Get taskId from table.

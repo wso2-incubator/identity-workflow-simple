@@ -76,10 +76,6 @@ public class ApprovalEventService {
             pagePagination.setPageNumber(offset);
         }
 
-        final int[] taskCount = new int[1];
-        int pageSize = pagePagination.getPageSize() > 0 ? pagePagination.getPageSize() : 20;
-        //Number of pages showing the task list.
-        int pages = (int) Math.ceil((double) taskCount[0] / (double) pageSize);
         Set<TaskSummaryDTO> taskSummaryDTOs = null;
         List<TaskSummaryDTO> tasks = listTasksOfApprovers(status);
         int taskListSize = tasks.size();
@@ -98,9 +94,9 @@ public class ApprovalEventService {
         DefaultWorkflowEventRequest defaultWorkflowEventRequest = new DefaultWorkflowEventRequestService();
         List<String> allRequestsList = getAllRequestRelatedUserAndRole();
         List<TaskSummaryDTO> taskSummaryDTOList = new ArrayList<>();
-        for (int i = 0; i < allRequestsList.size(); i++) {
+        for (String s : allRequestsList) {
             TaskSummaryDTO summeryDTO = new TaskSummaryDTO();
-            String eventId = getTaskRelatedStatus(allRequestsList.get(i), status);
+            String eventId = getTaskRelatedStatus(s, status);
             if (eventId != null) {
                 WorkflowRequest request = getWorkflowRequest(eventId);
                 TaskDetails taskDetails = getTaskDetails(request);
@@ -240,12 +236,11 @@ public class ApprovalEventService {
     public void updateStatus(String taskId, StateDTO nextState) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
-        String userName = CarbonContext.getThreadLocalCarbonContext().getUsername();
-        validateApprovers(taskId, userName);
+        validateApprovers(taskId);
             switch (nextState.getAction()) {
                 case APPROVE:
                     updateTaskStatusOfRequest(taskId, APPROVED);
-                    updateStepDetailsOfRequest(taskId, APPROVED);
+                    updateStepDetailsOfRequest(taskId);
                     break;
                 case REJECT:
                     String eventId = workflowEventRequestDAO.getRequestID(taskId);
@@ -275,7 +270,7 @@ public class ApprovalEventService {
         return request;
     }
 
-    private void updateStepDetailsOfRequest(String taskId, String status) {
+    private void updateStepDetailsOfRequest(String taskId) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
         String eventId = workflowEventRequestDAO.getRequestID(taskId);
@@ -288,11 +283,11 @@ public class ApprovalEventService {
         if (stepValue < numOfStates(request)) {
             defaultWorkflowEventRequest.addApproversOfRequests(request, parameterList);
         } else {
-            completeRequest(eventId, status);
+            completeRequest(eventId, ApprovalEventService.APPROVED);
         }
     }
 
-    private boolean validateApprovers(String taskId, String approverName) {
+    private void validateApprovers(String taskId) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
         List<String> eventList =getAllRequestRelatedUserAndRole();
@@ -305,10 +300,9 @@ public class ApprovalEventService {
 
         for (String task : lst) {
             if (taskId.equals(task)) {
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     private int numOfStates(WorkflowRequest request) {

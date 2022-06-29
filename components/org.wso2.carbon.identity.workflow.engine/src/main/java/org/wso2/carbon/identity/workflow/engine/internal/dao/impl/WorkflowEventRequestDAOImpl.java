@@ -21,8 +21,8 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
      * {@inheritDoc}
      */
     @Override
-    public String addApproversOfRequest(String taskId, String eventId, String workflowId, String approverType,
-                                        String approverName, String taskStatus) {
+    public void addApproversOfRequest(String taskId, String eventId, String workflowId, String approverType,
+                                      String approverName, String taskStatus) {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
         try {
@@ -40,7 +40,6 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
                     "in eventId: %s  & workflowId: %s", eventId, workflowId);
             throw new WorkflowEngineRuntimeException(errorMessage);
         }
-        return taskId;
     }
 
     /**
@@ -126,7 +125,7 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
             }
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving currentStep from" +
-                    "event Id: %s & workflowId: %s", eventId);
+                    "event Id: %s & workflowId: %s", eventId, workflowId);
             throw new WorkflowEngineRuntimeException(errorMessage);
         }
         return Integer.parseInt(stepExists);
@@ -173,11 +172,10 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         try {
             requestsList = jdbcTemplate.executeQuery(WorkflowEngineConstants.SqlQueries.
                             GET_APPROVER_NAME_RELATED_TO_CURRENT_TASK_ID, (resultSet, rowNumber) ->
-                            new String(resultSet.getString(WorkflowEngineConstants.APPROVER_NAME_COLUMN)),
+                            resultSet.getString(WorkflowEngineConstants.APPROVER_NAME_COLUMN),
                     preparedStatement -> preparedStatement.setString(1, taskId));
         } catch (DataAccessException e) {
-            String errorMessage = String.format("Error occurred while retrieving approvers from" +
-                    "task Id: %s", taskId);
+            String errorMessage = "Error occurred while retrieving approvers";
             throw new WorkflowEngineRuntimeException(errorMessage);
         }
         return requestsList;
@@ -215,7 +213,7 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         try {
             roleNameList = jdbcTemplate.executeQuery(WorkflowEngineConstants.SqlQueries.
                             GET_ROLE_NAME, (resultSet, rowNumber) ->
-                            new String(resultSet.getString(WorkflowEngineConstants.ROLE_NAME)),
+                            resultSet.getString(WorkflowEngineConstants.ROLE_NAME),
                     preparedStatement -> preparedStatement.setInt(1, roleId));
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving Role name from" +
@@ -237,7 +235,7 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
             requestId = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.
                             GET_REQUEST_ID,
                     ((resultSet, i) -> (
-                            resultSet.getString(WorkflowEngineConstants.Event_ID_COLUMN))),
+                            resultSet.getString(WorkflowEngineConstants.EVENT_ID))),
                     preparedStatement -> preparedStatement.setString(1, taskId));
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving request ID from" +
@@ -280,7 +278,7 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         try {
             requestIdList = jdbcTemplate.executeQuery(WorkflowEngineConstants.SqlQueries.
                             GET_REQUEST_ID_FROM_APPROVER, (resultSet, rowNumber) ->
-                            new String(resultSet.getString(WorkflowEngineConstants.Event_ID_COLUMN)),
+                            resultSet.getString(WorkflowEngineConstants.EVENT_ID),
                     preparedStatement -> preparedStatement.setString(1, approverName));
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving requestID from" +
@@ -300,10 +298,8 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         try {
             requestIdList = jdbcTemplate.executeQuery(WorkflowEngineConstants.SqlQueries.
                             GET_TASK_ID_FROM_APPROVER, (resultSet, rowNumber) ->
-                            new String(resultSet.getString(WorkflowEngineConstants.TASK_ID_COLUMN)),
-                    preparedStatement -> {
-                        preparedStatement.setString(1, approverName);
-                    });
+                            resultSet.getString(WorkflowEngineConstants.TASK_ID_COLUMN),
+                    preparedStatement -> preparedStatement.setString(1, approverName));
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving task id from" +
                     "approver name: %s", approverName);
@@ -323,10 +319,8 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         try {
             requestIdList = jdbcTemplate.executeQuery(WorkflowEngineConstants.SqlQueries.
                             GET_REQUEST_ID_FROM_APPROVER, (resultSet, rowNumber) ->
-                            new String(resultSet.getString(WorkflowEngineConstants.Event_ID_COLUMN)),
-                    preparedStatement -> {
-                        preparedStatement.setString(1, approverName);
-                    });
+                            resultSet.getString(WorkflowEngineConstants.EVENT_ID),
+                    preparedStatement -> preparedStatement.setString(1, approverName));
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving request id from" +
                     "approver name: %s", approverName);
@@ -448,10 +442,8 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         try {
             taskIdList = jdbcTemplate.executeQuery(WorkflowEngineConstants.SqlQueries.
                             GET_TASK_ID_FROM_REQUEST, (resultSet, rowNumber) ->
-                            new String(resultSet.getString(WorkflowEngineConstants.TASK_ID_COLUMN)),
-                    preparedStatement -> {
-                        preparedStatement.setString(1, eventId);
-                    });
+                            resultSet.getString(WorkflowEngineConstants.TASK_ID_COLUMN),
+                    preparedStatement -> preparedStatement.setString(1, eventId));
         } catch (DataAccessException e) {
             String errorMessage = String.format("Error occurred while retrieving tasks from" +
                     "request id : %s", eventId);
