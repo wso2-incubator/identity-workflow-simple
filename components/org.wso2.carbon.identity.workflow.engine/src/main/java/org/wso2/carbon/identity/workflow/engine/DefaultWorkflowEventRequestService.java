@@ -168,4 +168,14 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
         currentStep += 1;
         workflowEventRequestDAO.updateStateOfRequest(eventId, workflowId, currentStep);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteStateOfRequest(String eventId) {
+
+        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        workflowEventRequestDAO.deleteCurrentStepOfRequest(eventId);
+    }
 }

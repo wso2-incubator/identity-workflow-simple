@@ -236,6 +236,7 @@ public class ApprovalEventService {
     public void updateStatus(String taskId, StateDTO nextState) {
 
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        DefaultWorkflowEventRequest defaultWorkflowEventRequest = new DefaultWorkflowEventRequestService();
         validateApprovers(taskId);
             switch (nextState.getAction()) {
                 case APPROVE:
@@ -245,6 +246,7 @@ public class ApprovalEventService {
                 case REJECT:
                     String eventId = workflowEventRequestDAO.getRequestID(taskId);
                     updateTaskStatusOfRequest(taskId, REJECTED);
+                    defaultWorkflowEventRequest.deleteApprovalOfRequest(taskId);
                     completeRequest(eventId, REJECTED);
                     break;
                 case RELEASE:
@@ -345,11 +347,13 @@ public class ApprovalEventService {
 
         WSWorkflowResponse wsWorkflowResponse = new WSWorkflowResponse();
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        DefaultWorkflowEventRequest defaultWorkflowEventRequest = new DefaultWorkflowEventRequestService();
         String relationshipId = workflowEventRequestDAO.getRelationshipId(eventId);
         wsWorkflowResponse.setUuid(relationshipId);
         wsWorkflowResponse.setStatus(status);
         WSWorkflowCallBackService wsWorkflowCallBackService = new WSWorkflowCallBackService();
         wsWorkflowCallBackService.onCallback(wsWorkflowResponse);
+        defaultWorkflowEventRequest.deleteStateOfRequest(eventId);
     }
 
     private TaskDetails getTaskDetails(WorkflowRequest workflowRequest) {

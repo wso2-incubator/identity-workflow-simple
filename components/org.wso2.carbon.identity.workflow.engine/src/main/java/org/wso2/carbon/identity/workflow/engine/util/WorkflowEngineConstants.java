@@ -25,6 +25,7 @@ public class WorkflowEngineConstants {
         public static final String ADD_CURRENT_STEP_FOR_EVENT = "INSERT INTO WF_WORKFLOW_APPROVAL_STATE (EVENT_ID,WORKFLOW_ID, CURRENT_STEP) VALUES (?,?,?)";
         public static final String GET_CURRENT_STEP = "SELECT CURRENT_STEP FROM WF_WORKFLOW_APPROVAL_STATE WHERE EVENT_ID = ? AND WORKFLOW_ID = ?";
         public static final String UPDATE_STATE_OF_REQUEST = "UPDATE WF_WORKFLOW_APPROVAL_STATE SET CURRENT_STEP=? WHERE EVENT_ID = ? AND WORKFLOW_ID = ?";
+        public static final String DELETE_CURRENT_STEP_OF_REQUEST = "DELETE FROM WF_WORKFLOW_APPROVAL_STATE WHERE EVENT_ID=?";
         public static final String GET_APPROVER_NAME_RELATED_TO_CURRENT_TASK_ID = "SELECT DISTINCT APPROVER_NAME FROM WF_WORKFLOW_APPROVAL_RELATION WHERE TASK_ID = ?";
         public static final String UPDATE_TASK_STATUS = "UPDATE WF_WORKFLOW_APPROVAL_RELATION SET TASK_STATUS=? WHERE TASK_ID=?";
         public static final String GET_REQUEST_ID = "SELECT DISTINCT EVENT_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE TASK_ID = ?";
@@ -58,7 +59,6 @@ public class WorkflowEngineConstants {
         public static final String ASSIGNEE_TYPE = "Type";
         public static final String STATUS_ERROR = "Status is notAcceptable";
         public static final String CREDENTIAL = "Credential";
-        public static final String BPS_PROFILE = "BPSProfile";
         public static final String HT_SUBJECT = "HTSubject";
     }
 
@@ -67,22 +67,16 @@ public class WorkflowEngineConstants {
         RESERVED,
         COMPLETED;
 
-        private TaskStatus() {
+        TaskStatus() {
 
         }
     }
 
     public static class ParameterHolder {
         public static final String WORKFLOW_IMPL = "WorkflowImpl";
-
-        public ParameterHolder() {
-        }
     }
 
     public static class ParameterValue {
         public static final String WORKFLOW_NAME = "WorkflowName";
-
-        public ParameterValue() {
-        }
     }
 }

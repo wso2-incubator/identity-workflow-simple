@@ -291,6 +291,7 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<String> getTaskIdList(String approverName) {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
@@ -395,6 +396,9 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
             return taskStatus;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateStatusOfRequest(String taskId, String taskStatus) {
 
@@ -435,6 +439,10 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         return taskStatus;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<String> getTaskId(String eventId) {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
@@ -479,5 +487,21 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
 
         preparedStatement.setString(1, taskStatus);
         preparedStatement.setString(2, taskId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteCurrentStepOfRequest(String eventId) {
+
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+        try {
+            jdbcTemplate.executeUpdate(WorkflowEngineConstants.SqlQueries.DELETE_CURRENT_STEP_OF_REQUEST,
+                    preparedStatement -> preparedStatement.setString(1, eventId));
+        } catch (DataAccessException e) {
+            String errorMessage = String.format("Error while deleting the current step from eventID:%s", eventId);
+            throw new WorkflowEngineRuntimeException(errorMessage);
+        }
     }
 }

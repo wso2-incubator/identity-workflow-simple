@@ -75,4 +75,11 @@ public interface DefaultWorkflowEventRequest {
      * @return workflow Id.
      */
     String getWorkflowId(WorkflowRequest request);
+
+    /**
+     * Delete the current step using giving eventId
+     *
+     * @param eventId the request ID that need to be checked.
+     */
+    void deleteStateOfRequest(String eventId);
 }

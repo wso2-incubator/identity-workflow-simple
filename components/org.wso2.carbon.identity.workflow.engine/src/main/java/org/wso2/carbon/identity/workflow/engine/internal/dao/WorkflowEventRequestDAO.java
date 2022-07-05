@@ -86,8 +86,20 @@ public interface WorkflowEventRequestDAO {
      */
     List<String> getRequestIdFromApprover(String approverName);
 
+    /**
+     * Retrieve the role id list giving the username.
+     *
+     * @param userName the username that need to be checked.
+     * @return role ID list.
+     */
     List<Integer> getRolesID(String userName);
 
+    /**
+     * Get the role name giving the role ID.
+     *
+     * @param roleId the roleID that need to be checked.
+     * @return role name list.
+     */
     List<String> getRoleNames(int roleId);
 
     /**
@@ -161,5 +173,19 @@ public interface WorkflowEventRequestDAO {
      * @return task status.
      */
     String getStatusOfTask(String requestId);
+
+    /**
+     * Retrieve the tasks list giving event ID.
+     *
+     * @param eventId the request ID that need to be checked.
+     * @return tasks list.
+     */
     List<String> getTaskId(String eventId);
+
+    /**
+     * Delete the current step using giving event ID.
+     *
+     * @param eventId the request ID that need to be checked.
+     */
+    void deleteCurrentStepOfRequest(String eventId);
 }
