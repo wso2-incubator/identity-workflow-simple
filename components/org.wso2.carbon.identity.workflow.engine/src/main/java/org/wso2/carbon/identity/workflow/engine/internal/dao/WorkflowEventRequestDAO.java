@@ -103,14 +103,6 @@ public interface WorkflowEventRequestDAO {
     List<String> getRoleNames(int roleId);
 
     /**
-     * Returns the tasks list given the authenticated approver name.
-     *
-     * @param approverName the approver name that need to be checked.
-     * @return tasks list.
-     */
-    List<String> getTaskIdList(String approverName);
-
-    /**
      * Returns the events list according to the user.
      *
      * @param approverName admin user.
@@ -188,4 +180,28 @@ public interface WorkflowEventRequestDAO {
      * @param eventId the request ID that need to be checked.
      */
     void deleteCurrentStepOfRequest(String eventId);
+
+    /**
+     * Retrieve the workflow ID giving task ID.
+     *
+     * @param taskId the task ID that need to be checked.
+     * @return workflow ID.
+     */
+    String getWorkflowID(String taskId);
+
+    /**
+     * Retrieve the workflow name giving workflow ID.
+     *
+     * @param workflowID workflow ID.
+     * @return workflow definition name.
+     */
+    String getWorkflowName(String workflowID);
+
+    /**
+     * Retrieve the entity name giving request ID.
+     *
+     * @param requestID the request ID that need to be checked.
+     * @return entity name of the request
+     */
+    String getEntityNameOfRequest(String requestID);
 }

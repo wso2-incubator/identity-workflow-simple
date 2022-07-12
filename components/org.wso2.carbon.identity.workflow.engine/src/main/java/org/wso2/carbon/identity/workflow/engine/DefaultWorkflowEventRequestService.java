@@ -1,7 +1,12 @@
 package org.wso2.carbon.identity.workflow.engine;
 
-import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineException;
-import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineRuntimeException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineClientException;
+import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineServerException;
+import org.wso2.carbon.identity.workflow.engine.internal.dao.WorkflowEventRequestDAO;
+import org.wso2.carbon.identity.workflow.engine.internal.dao.impl.WorkflowEventRequestDAOImpl;
 import org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerServiceImpl;
@@ -14,8 +19,6 @@ import org.wso2.carbon.identity.workflow.mgt.bean.WorkflowAssociation;
 import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 import org.wso2.carbon.identity.workflow.mgt.exception.InternalWorkflowException;
 import org.wso2.carbon.identity.workflow.mgt.exception.WorkflowException;
-import org.wso2.carbon.identity.workflow.engine.internal.dao.WorkflowEventRequestDAO;
-import org.wso2.carbon.identity.workflow.engine.internal.dao.impl.WorkflowEventRequestDAOImpl;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,13 +28,15 @@ import java.util.UUID;
  */
 public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventRequest {
 
+    private WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+    private static final Log log = LogFactory.getLog(DefaultWorkflowEventRequestService.class);
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void addApproversOfRequests(WorkflowRequest request, List<Parameter> parameterList) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
         String taskId = UUID.randomUUID().toString();
         String eventId = getRequestId(request);
         String workflowId = getWorkflowId(request);
@@ -92,10 +97,11 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
                 Workflow  workflow = workflowManagementService.getWorkflow(association.getWorkflowId());
                 workflowId = workflow.getWorkflowId();
             } catch (WorkflowException e) {
-                throw new WorkflowEngineException("The workflow Id is not valid");
+                throw new WorkflowEngineClientException(
+                        WorkflowEngineConstants.ErrorMessages.ASSOCIATION_NOT_FOUND.getCode(),
+                        WorkflowEngineConstants.ErrorMessages.WORKFLOW_ID_NOT_FOUND.getDescription());
             }
         }
-
         return workflowId;
     }
 
@@ -111,7 +117,9 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
             associations = workFlowExecutorManagerService.getWorkflowAssociationsForRequest(
                     workflowRequest.getEventType(), workflowRequest.getTenantId());
         } catch (InternalWorkflowException e) {
-            throw new WorkflowEngineRuntimeException("The associations are not connecting with any request");
+            throw new WorkflowEngineClientException(
+                    WorkflowEngineConstants.ErrorMessages.ASSOCIATION_NOT_FOUND.getCode(),
+                    WorkflowEngineConstants.ErrorMessages.ASSOCIATION_NOT_FOUND.getDescription());
         }
         return associations;
     }
@@ -122,7 +130,12 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public String getApprovalOfRequest(String eventId) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO=new WorkflowEventRequestDAOImpl();
+        if (StringUtils.isEmpty(eventId)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cannot retrieve task from eventID: " + eventId);
+            }
+            throw buildTaskNotFoundError();
+        }
         return workflowEventRequestDAO.getApproversOfRequest(eventId);
     }
 
@@ -132,7 +145,11 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public void deleteApprovalOfRequest(String taskId) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        if (StringUtils.isEmpty(taskId)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cannot delete task from taskID: " + taskId);
+            }
+        }
         workflowEventRequestDAO.deleteApproversOfRequest(taskId);
     }
 
@@ -142,7 +159,12 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public void createStatesOfRequest(String eventId, String workflowId, int currentStep) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        if (StringUtils.isEmpty(eventId) || StringUtils.isEmpty(workflowId)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cannot add task from event ID: " + eventId);
+            }
+            throw buildTaskNotFoundError();
+        }
         workflowEventRequestDAO.createStatesOfRequest(eventId, workflowId, currentStep);
     }
 
@@ -152,7 +174,12 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public int getStateOfRequest(String eventId, String workflowId) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        if (StringUtils.isEmpty(eventId) || StringUtils.isEmpty(workflowId)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cannot retrieve task step from eventID: " + eventId);
+            }
+            throw buildTaskNotFoundError();
+        }
         return workflowEventRequestDAO.getStateOfRequest(eventId, workflowId);
     }
 
@@ -162,8 +189,12 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public void updateStateOfRequest(String eventId, String workflowId) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
-
+        if (StringUtils.isEmpty(eventId) || StringUtils.isEmpty(workflowId)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cannot update task from eventID: " + eventId);
+            }
+            throw buildTaskNotFoundError();
+        }
         int currentStep = getStateOfRequest(eventId, workflowId);
         currentStep += 1;
         workflowEventRequestDAO.updateStateOfRequest(eventId, workflowId, currentStep);
@@ -175,7 +206,19 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public void deleteStateOfRequest(String eventId) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
+        if (StringUtils.isEmpty(eventId)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cannot delete task from eventID: " + eventId);
+            }
+            throw buildTaskNotFoundError();
+        }
         workflowEventRequestDAO.deleteCurrentStepOfRequest(eventId);
+    }
+
+    private WorkflowEngineServerException buildTaskNotFoundError() {
+
+        return new WorkflowEngineServerException(
+                WorkflowEngineConstants.ErrorMessages.TASK_NOT_FOUND.getCode(),
+                WorkflowEngineConstants.ErrorMessages.TASK_NOT_FOUND.getDescription());
     }
 }

@@ -14,7 +14,7 @@ public class TaskDataDTO {
 
     private String description = null;
 
-    private Integer priority = null;
+    private String priority = null;
 
     private String initiator = null;
 
@@ -71,12 +71,12 @@ public class TaskDataDTO {
     /**
      * Priority of the Approval task.
      **/
-    public Integer getPriority() {
+    public String getPriority() {
 
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(String priority) {
 
         this.priority = priority;
     }
@@ -128,6 +128,13 @@ public class TaskDataDTO {
     public void setProperties(List<PropertyDTO> properties) {
         this.properties = properties;
     }
+    private String createdTimeInMillis = null;
+    public String getCreatedTimeInMillis() {
+        return createdTimeInMillis;
+    }
+    public void setCreatedTimeInMillis(String createdTimeInMillis) {
+        this.createdTimeInMillis = createdTimeInMillis;
+    }
 
     @Override
     public String toString() {
@@ -142,6 +149,7 @@ public class TaskDataDTO {
         sb.append("  approvalStatus: ").append(approvalStatus).append("\n");
         sb.append("  assignees: ").append(assignees).append("\n");
         sb.append("  properties: ").append(properties).append("\n");
+        sb.append("  createdTimeInMillis: ").append(createdTimeInMillis).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

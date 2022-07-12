@@ -21,7 +21,7 @@ public class TaskSummaryDTO {
 
     private StatusEnum status = null;
 
-    private Integer priority = null;
+    private String priority = null;
 
     private String createdTimeInMillis = null;
 
@@ -88,10 +88,10 @@ public class TaskSummaryDTO {
     /**
      * Priority of the Approval task
      **/
-    public Integer getPriority() {
+    public String getPriority() {
         return priority;
     }
-    public void setPriority(Integer priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
