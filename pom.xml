@@ -160,7 +160,6 @@
         </repository>
     </repositories>
 
-
     <dependencyManagement>
     <dependencies>
         <dependency>
@@ -198,6 +197,66 @@
                 <artifactId>org.wso2.carbon.user.mgt</artifactId>
                 <version>${carbon.identity.framework.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>identity-framework</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng-common</artifactId>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-testng</artifactId>
+        <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+            <version>${h2database.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>${pax.logging.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.someexternallib</groupId>
+            <artifactId>someexternallibartifact</artifactId>
+            <version>...</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </dependencyManagement>
 
@@ -211,6 +270,11 @@
         <apache.felix.scr.ds.annotations.version>1.2.8</apache.felix.scr.ds.annotations.version>
         <carbon.identity.framework.version>5.18.187</carbon.identity.framework.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
+        <testng.version>7.4.0</testng.version>
+        <mockito.version>3.2.4</mockito.version>
+        <powermock.version>1.7.4</powermock.version>
+        <h2database.version>2.1.210</h2database.version>
+        <pax.logging.api.version>1.10.1</pax.logging.api.version>
     </properties>
 
 </project>
