@@ -36,7 +36,6 @@ public class WorkflowEngineConstants {
         public static final String GET_WORKFLOW_ID = "SELECT DISTINCT WORKFLOW_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE TASK_ID = ?";
         public static final String UPDATE_TASK_STATUS = "UPDATE WF_WORKFLOW_APPROVAL_RELATION SET TASK_STATUS=? WHERE TASK_ID=?";
         public static final String GET_REQUEST_ID = "SELECT DISTINCT EVENT_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE TASK_ID = ?";
-        public static final String GET_TASK_ID_FROM_APPROVER = "SELECT TASK_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE APPROVER_NAME= ?";
         public static final String GET_ENTITY_NAME = "SELECT ENTITY_NAME FROM WF_REQUEST_ENTITY_RELATIONSHIP WHERE REQUEST_ID = ?";
         public static final String GET_TASK_ID_FROM_REQUEST = "SELECT TASK_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE EVENT_ID= ?";
         public static final String GET_REQUEST_ID_FROM_APPROVER = "SELECT EVENT_ID FROM WF_WORKFLOW_APPROVAL_RELATION WHERE APPROVER_NAME= ?";
@@ -66,7 +65,6 @@ public class WorkflowEngineConstants {
         public static final String SYSTEM_USER = "system";
         public static final String SYSTEM_PRIMARY_USER = "system_primary_";
         public static final String ASSIGNEE_TYPE = "Type";
-        public static final String STATUS_ERROR = "Status is notAcceptable";
         public static final String CREDENTIAL = "Credential";
         public static final String HT_SUBJECT = "HTSubject";
         public static final String INITIATED_BY = "Initiated_by ";
@@ -104,7 +102,16 @@ public class WorkflowEngineConstants {
         ERROR_OCCURRED_WHILE_RETRIEVING_WORKFLOW_REQUEST("SWE_00004",
                 "Cannot get the workflow request given the request Id"),
         ERROR_OCCURRED_WHILE_RETRIEVING_PARAMETER_LIST("SWE_00005",
-                "The parameterList can't get given the associated workflowId");
+                "The parameterList can't get given the associated workflowId"),
+        ERROR_OCCURRED_WHILE_CHANGING_APPROVALS_STATE("SWE_00006", "Unable to update the approval status, " +
+                "Server encountered an error while updating the approval task status."),
+        ERROR_OCCURRED_WHILE_RETRIEVING_APPROVAL_OF_USER("SWE_00007", "Unable to retrieve the user approval, " +
+                "Server encountered an error while retrieving information on the approval task."),
+        ERROR_OCCURRED_WHILE_RETRIEVING_APPROVALS_FOR_USER("SWE_00008", "Unable to retrieve approvals for the user, " +
+                "Server encountered an error while retrieving approvals for user."),
+        USER_ERROR_NON_EXISTING_TASK_ID("SWE_10001", "Task does not exist."),
+        USER_ERROR_NOT_ACCEPTABLE_INPUT_FOR_NEXT_STATE("10005", "Unacceptable input provided, " +
+                "Only [CLAIM, RELEASE, APPROVED, REJECTED] are acceptable.");
         private final String code;
         private final String description;
 
@@ -130,6 +137,7 @@ public class WorkflowEngineConstants {
             return this.description;
         }
 
+        @Override
         public String toString() {
 
             return this.code + " - " + this.description;

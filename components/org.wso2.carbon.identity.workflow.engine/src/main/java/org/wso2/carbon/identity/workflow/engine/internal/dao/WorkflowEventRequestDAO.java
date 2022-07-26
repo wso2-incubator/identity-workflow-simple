@@ -79,14 +79,6 @@ public interface WorkflowEventRequestDAO {
     String getInitiatedUser(String requestId);
 
     /**
-     * Returns the events list given the authenticated approver name.
-     *
-     * @param approverName the approver name that need to be checked.
-     * @return requests list.
-     */
-    List<String> getRequestIdFromApprover(String approverName);
-
-    /**
      * Retrieve the role id list giving the username.
      *
      * @param userName the username that need to be checked.

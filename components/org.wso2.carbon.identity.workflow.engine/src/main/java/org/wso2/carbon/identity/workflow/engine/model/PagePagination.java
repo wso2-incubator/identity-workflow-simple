@@ -18,6 +18,9 @@ public class PagePagination {
         return this.localPageSize;
     }
 
+    /**
+     * Set maximum number of results expected.
+     */
     public void setPageSize(int param) {
 
         this.localPageSizeTracker = param != Integer.MIN_VALUE;
@@ -25,13 +28,16 @@ public class PagePagination {
     }
 
     /**
-     *  Start index of the search.
+     * Start index of the search.
      */
     public int getPageNumber() {
 
         return this.localPageNumber;
     }
 
+    /**
+     * Set start index of the search.
+     */
     public void setPageNumber(int param) {
 
         this.localPageNumberTracker = param != Integer.MIN_VALUE;

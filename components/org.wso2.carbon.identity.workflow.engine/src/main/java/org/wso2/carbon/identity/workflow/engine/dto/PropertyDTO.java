@@ -17,6 +17,9 @@ public class PropertyDTO {
         return key;
     }
 
+    /**
+     * Set Key of the task property.
+     **/
     public void setKey(String key) {
 
         this.key = key;
@@ -30,6 +33,9 @@ public class PropertyDTO {
         return value;
     }
 
+    /**
+     * Set Value of the key of the task property.
+     **/
     public void setValue(String value) {
 
         this.value = value;

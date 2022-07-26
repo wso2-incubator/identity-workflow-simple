@@ -4,6 +4,7 @@ package org.wso2.carbon.identity.workflow.engine.model;
  * model class for task subject & task description.
  */
 public class TaskDetails {
+
     String taskDescription;
     String taskSubject;
 
@@ -15,6 +16,9 @@ public class TaskDetails {
         return taskDescription;
     }
 
+    /**
+     * Set the subject of the task.
+     */
     public void setTaskDescription(String taskDescription) {
 
         this.taskDescription = taskDescription;
@@ -28,6 +32,9 @@ public class TaskDetails {
         return taskSubject;
     }
 
+    /**
+     * Set the description of the task.
+     */
     public void setTaskSubject(String taskSubject) {
 
         this.taskSubject = taskSubject;

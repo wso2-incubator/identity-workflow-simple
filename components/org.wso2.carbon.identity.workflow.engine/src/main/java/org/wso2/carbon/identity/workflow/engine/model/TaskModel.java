@@ -14,10 +14,15 @@ public class TaskModel {
      * Unique ID to represent a approval task
      **/
     public String getId() {
+
         return id;
     }
 
+    /**
+     * Set unique ID to represent a approval task
+     **/
     public void setId(String id) {
+
         this.id = id;
     }
 
@@ -25,10 +30,15 @@ public class TaskModel {
      * To whom the task is assigned:\n  * user - username(s) if the task is reserved for specific user(s).\n  * group - role name(s) if the task is assignable for group(s).\n
      **/
     public Map<String, String> getAssignees() {
+
         return assignees;
     }
 
+    /**
+     * Set to whom the task is assigned:\n  * user - username(s) if the task is reserved for specific user(s).\n  * group - role name(s) if the task is assignable for group(s).\n
+     **/
     public void setAssignees(Map<String, String> assignees) {
+
         this.assignees = assignees;
     }
 }

@@ -12,13 +12,16 @@ public class StateDTO {
     private ActionEnum action = null;
 
     /**
-     * Action to perform on the task.
+     * getAction to perform on the task.
      **/
     public ActionEnum getAction() {
 
         return action;
     }
 
+    /**
+     * Set Action to perform on the task.
+     **/
     public void setAction(ActionEnum action) {
 
         this.action = action;

@@ -12,13 +12,16 @@ public class TStatus {
     }
 
     /**
-     * The status of the task [RESERVED, READY or COMPLETED].
+     * Get the status of the task [RESERVED, READY or COMPLETED].
      */
     public String getTStatus() {
 
         return this.localTStatus;
     }
 
+    /**
+     * Set the status of the task [RESERVED, READY or COMPLETED].
+     */
     public void setTStatus(String param) {
 
         this.localTStatus = param;

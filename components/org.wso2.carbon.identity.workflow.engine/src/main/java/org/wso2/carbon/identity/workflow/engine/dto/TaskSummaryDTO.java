@@ -1,7 +1,7 @@
 package org.wso2.carbon.identity.workflow.engine.dto;
 
 /**
- *  DTO class for tasks list.
+ * DTO class for tasks list.
  */
 public class TaskSummaryDTO {
 
@@ -16,7 +16,7 @@ public class TaskSummaryDTO {
     private String taskType = null;
 
     public enum StatusEnum {
-        READY,  RESERVED,  COMPLETED,
+        READY, RESERVED, COMPLETED,
     }
 
     private StatusEnum status = null;
@@ -29,9 +29,15 @@ public class TaskSummaryDTO {
      * Unique ID to represent an Approval Task
      **/
     public String getId() {
+
         return id;
     }
+
+    /**
+     * Set Unique ID to represent an Approval Task
+     **/
     public void setId(String id) {
+
         this.id = id;
     }
 
@@ -39,9 +45,15 @@ public class TaskSummaryDTO {
      * Unique name for the Approval Task
      **/
     public String getName() {
+
         return name;
     }
+
+    /**
+     * Set Unique name for the Approval Task
+     **/
     public void setName(String name) {
+
         this.name = name;
     }
 
@@ -49,9 +61,15 @@ public class TaskSummaryDTO {
      * Display value for Approval Operation
      **/
     public String getPresentationSubject() {
+
         return presentationSubject;
     }
+
+    /**
+     * Set display value for Approval Operation
+     **/
     public void setPresentationSubject(String presentationSubject) {
+
         this.presentationSubject = presentationSubject;
     }
 
@@ -59,9 +77,15 @@ public class TaskSummaryDTO {
      * Display value for Approval Task
      **/
     public String getPresentationName() {
+
         return presentationName;
     }
+
+    /**
+     * Set display value for Approval Task
+     **/
     public void setPresentationName(String presentationName) {
+
         this.presentationName = presentationName;
     }
 
@@ -69,9 +93,15 @@ public class TaskSummaryDTO {
      * Type of the Approval
      **/
     public String getTaskType() {
+
         return taskType;
     }
+
+    /**
+     * Set type of the Approval
+     **/
     public void setTaskType(String taskType) {
+
         this.taskType = taskType;
     }
 
@@ -79,9 +109,15 @@ public class TaskSummaryDTO {
      * State of the Approval task
      **/
     public StatusEnum getStatus() {
+
         return status;
     }
+
+    /**
+     * Set state of the Approval task
+     **/
     public void setStatus(StatusEnum status) {
+
         this.status = status;
     }
 
@@ -89,9 +125,15 @@ public class TaskSummaryDTO {
      * Priority of the Approval task
      **/
     public String getPriority() {
+
         return priority;
     }
+
+    /**
+     * Set priority of the Approval task
+     **/
     public void setPriority(String priority) {
+
         this.priority = priority;
     }
 
@@ -99,14 +141,20 @@ public class TaskSummaryDTO {
      * The time that the operation for approval initiated
      **/
     public String getCreatedTimeInMillis() {
+
         return createdTimeInMillis;
     }
+
+    /**
+     * Set the time that the operation for approval initiated
+     **/
     public void setCreatedTimeInMillis(String createdTimeInMillis) {
+
         this.createdTimeInMillis = createdTimeInMillis;
     }
 
     @Override
-    public String toString()  {
+    public String toString() {
 
         StringBuilder sb = new StringBuilder();
         sb.append("class TaskSummaryDTO {\n");

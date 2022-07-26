@@ -1,7 +1,7 @@
 package org.wso2.carbon.identity.workflow.engine.exception;
 
 /**
- * Exception class to handle workflow engine exceptions.
+ * Base exception for handling workflow engine exceptions.
  */
 public class WorkflowEngineException extends java.lang.RuntimeException {
 
