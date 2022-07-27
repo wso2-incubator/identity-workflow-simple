@@ -69,6 +69,7 @@ public class WorkflowEngineConstants {
         public static final String HT_SUBJECT = "HTSubject";
         public static final String INITIATED_BY = "Initiated_by ";
         public static final String ENTITY_NAME = " User_Name:";
+        public static final String SIMPLE_WORKFLOW_ENGINE_TASK_ID = "SWE_";
     }
 
     public enum TaskStatus {

@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,7 +46,7 @@ import java.util.stream.Stream;
 /**
  * Call internal osgi services to perform user's approval task related operations.
  */
-public class ApprovalEventService {
+public class SimpleWorkflowEngineApprovalService {
 
     private static final String PENDING = "PENDING";
     private static final String APPROVED = "APPROVED";
@@ -114,15 +115,14 @@ public class ApprovalEventService {
                 String taskId = defaultWorkflowEventRequest.getApprovalOfRequest(request.getUuid());
                 String taskStatus = workflowEventRequestDAO.getTaskStatusOfRequest(taskId);
                 String[] taskStatusValue = taskStatus.split(",", 0);
-                String workflowID = workflowEventRequestDAO.getWorkflowID(taskId);
-                String workflowName = workflowEventRequestDAO.getWorkflowName(workflowID);
                 String entityNameOfRequest = workflowEventRequestDAO.getEntityNameOfRequest(request.getUuid());
                 Timestamp createdTime = workflowEventRequestDAO.getCreatedAtTimeInMill(request.getUuid());
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(createdTime.getTime());
                 long cal = calendar.getTimeInMillis();
                 setCreatedTime(cal);
-                summeryDTO.setId(taskId.concat(" " + workflowName).concat(WorkflowEngineConstants.ParameterName.
+                String relationshipId= WorkflowEngineConstants.ParameterName.SIMPLE_WORKFLOW_ENGINE_TASK_ID.concat(taskId);
+                summeryDTO.setId(relationshipId.concat(" " + eventType).concat(WorkflowEngineConstants.ParameterName.
                         ENTITY_NAME + entityNameOfRequest));
                 summeryDTO.setName(WorkflowEngineConstants.ParameterName.APPROVAL_TASK);
                 summeryDTO.setTaskType(eventType);
@@ -216,8 +216,9 @@ public class ApprovalEventService {
 
         try {
             WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
-            String[] taskArray = task.split(" ", 0);
-            String taskId = taskArray[0];
+            String[] taskSplitArray = task.split(" ", 0);
+            String[] splitTask = taskSplitArray[0].split("_", 0);
+            String taskId=splitTask[1];
             String requestId = workflowEventRequestDAO.getRequestID(taskId);
             WorkflowRequest request = getWorkflowRequest(requestId);
             TaskDetails taskDetails = getTaskDetails(request);
@@ -350,7 +351,7 @@ public class ApprovalEventService {
         if (stepValue < numOfStates(request)) {
             defaultWorkflowEventRequest.addApproversOfRequests(request, parameterList);
         } else {
-            completeRequest(eventId, ApprovalEventService.APPROVED);
+            completeRequest(eventId, SimpleWorkflowEngineApprovalService.APPROVED);
         }
     }
 
