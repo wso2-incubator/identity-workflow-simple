@@ -614,9 +614,7 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
             taskExist = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.GET_TASK_DATA,
                     ((resultSet, i) -> (
                             resultSet.getString(WorkflowEngineConstants.TASK_STATUS_COLUMN))),
-                    preparedStatement -> {
-                        preparedStatement.setString(1, taskId);
-                    });
+                    preparedStatement -> preparedStatement.setString(1, taskId));
             if (taskExist == null) {
                 return null;
             }
