@@ -196,4 +196,12 @@ public interface WorkflowEventRequestDAO {
      * @return entity name of the request
      */
     String getEntityNameOfRequest(String requestID);
+
+    /**
+     * Retrieve the task giving taskID.
+     *
+     * @param taskId the task ID that need to be checked.
+     * @return task.
+     */
+    String getTask(String taskId);
 }

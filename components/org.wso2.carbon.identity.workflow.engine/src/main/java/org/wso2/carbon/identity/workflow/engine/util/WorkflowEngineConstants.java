@@ -49,6 +49,7 @@ public class WorkflowEngineConstants {
         public static final String GET_WORKFLOW_NAME = "SELECT WF_NAME FROM WF_WORKFLOW WHERE ID =? ";
         public static final String GET_ROLE_ID = "SELECT UM_ROLE_ID FROM UM_HYBRID_USER_ROLE WHERE UM_USER_NAME=?";
         public static final String GET_ROLE_NAME = "SELECT UM_ROLE_NAME FROM UM_HYBRID_ROLE WHERE UM_ID=?";
+        public  static final String GET_TASK_DATA = "SELECT TASK_STATUS FROM WF_WORKFLOW_APPROVAL_RELATION WHERE TASK_ID=?";
     }
 
     public static class ParameterName {

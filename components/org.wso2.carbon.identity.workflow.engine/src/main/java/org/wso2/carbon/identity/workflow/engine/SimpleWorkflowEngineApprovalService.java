@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -121,12 +120,11 @@ public class SimpleWorkflowEngineApprovalService {
                 calendar.setTimeInMillis(createdTime.getTime());
                 long cal = calendar.getTimeInMillis();
                 setCreatedTime(cal);
-                String relationshipId= WorkflowEngineConstants.ParameterName.SIMPLE_WORKFLOW_ENGINE_TASK_ID.concat(taskId);
-                summeryDTO.setId(relationshipId.concat(" " + eventType).concat(WorkflowEngineConstants.ParameterName.
-                        ENTITY_NAME + entityNameOfRequest));
+                summeryDTO.setId(taskId);
                 summeryDTO.setName(WorkflowEngineConstants.ParameterName.APPROVAL_TASK);
                 summeryDTO.setTaskType(eventType);
-                summeryDTO.setPresentationName(taskDetails.getTaskSubject());
+                summeryDTO.setPresentationName(eventType.concat(WorkflowEngineConstants.ParameterName.
+                        ENTITY_NAME + entityNameOfRequest + " ").concat(taskDetails.getTaskSubject()));
                 summeryDTO.setPresentationSubject(taskDetails.getTaskDescription());
                 summeryDTO.setCreatedTimeInMillis(String.valueOf(getCreatedTime()));
                 summeryDTO.setPriority(WorkflowEngineConstants.ParameterName.PRIORITY);
@@ -209,16 +207,13 @@ public class SimpleWorkflowEngineApprovalService {
     /**
      * Get details of a task identified by the taskId.
      *
-     * @param task the unique ID.
+     * @param taskId the unique ID.
      * @return TaskDataDto object.
      */
-    public TaskDataDTO getTaskData(String task) {
+    public TaskDataDTO getTaskData(String taskId) {
 
         try {
             WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
-            String[] taskSplitArray = task.split(" ", 0);
-            String[] splitTask = taskSplitArray[0].split("_", 0);
-            String taskId=splitTask[1];
             String requestId = workflowEventRequestDAO.getRequestID(taskId);
             WorkflowRequest request = getWorkflowRequest(requestId);
             TaskDetails taskDetails = getTaskDetails(request);

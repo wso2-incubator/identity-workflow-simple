@@ -601,4 +601,33 @@ public class WorkflowEventRequestDAOImpl implements WorkflowEventRequestDAO {
         }
         return taskStatus;
     }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public String getTask(String taskId){
+
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+        String taskExist;
+        try {
+            taskExist = jdbcTemplate.fetchSingleRecord(WorkflowEngineConstants.SqlQueries.GET_TASK_DATA,
+                    ((resultSet, i) -> (
+                            resultSet.getString(WorkflowEngineConstants.TASK_STATUS_COLUMN))),
+                    preparedStatement -> {
+                        preparedStatement.setString(1, taskId);
+                    });
+            if (taskExist == null) {
+                return null;
+            }
+        } catch (DataAccessException e) {
+            String errorMessage = String.format("Error occurred while retrieving taskDataDTO from" +
+                    "task Id: %s", taskId);
+            if (log.isDebugEnabled()) {
+                log.debug(errorMessage, e);
+            }
+            throw new WorkflowEngineServerException(errorMessage, e);
+        }
+        return taskExist;
+    }
 }
