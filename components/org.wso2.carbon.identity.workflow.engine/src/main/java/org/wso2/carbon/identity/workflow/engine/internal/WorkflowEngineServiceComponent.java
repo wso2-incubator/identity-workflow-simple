@@ -7,11 +7,11 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.identity.role.v2.mgt.core.RoleManagementService;
 import org.wso2.carbon.identity.workflow.engine.ApprovalEventService;
 import org.wso2.carbon.identity.workflow.engine.DefaultApprovalWorkflow;
 import org.wso2.carbon.identity.workflow.engine.DefaultTemplateInitializer;
 import org.wso2.carbon.identity.workflow.engine.DefaultWorkflowExecutor;
-import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementService;
 import org.wso2.carbon.identity.workflow.mgt.workflow.AbstractWorkflow;
 
@@ -76,18 +76,20 @@ public class WorkflowEngineServiceComponent {
     }
 
     @Reference(
-            name = "org.wso2.carbon.identity.workflow.mgt.executor",
-            service = org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService.class,
+            name = "RoleManagementServiceComponent",
+            service = RoleManagementService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetWorkflowExecutorManagerService")
-    protected void setWorkflowExecutorManagerService(WorkflowExecutorManagerService workflowExecutorManagerService) {
+            unbind = "unsetRoleManagementService"
+    )
+    private void setRoleManagementService(RoleManagementService roleManagementService) {
 
-        WorkflowEngineServiceDataHolder.getInstance().setWorkflowExecutorManagerService(workflowExecutorManagerService);
+        WorkflowEngineServiceDataHolder.getInstance().setRoleManagementService(roleManagementService);
     }
 
-    protected void unsetWorkflowExecutorManagerService(WorkflowExecutorManagerService workflowExecutorManagerService) {
+    private void unsetRoleManagementService(RoleManagementService roleManagementService) {
 
-        WorkflowEngineServiceDataHolder.getInstance().setWorkflowExecutorManagerService(workflowExecutorManagerService);
+        WorkflowEngineServiceDataHolder.getInstance().setRoleManagementService(null);
     }
+
 }

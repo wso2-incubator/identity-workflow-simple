@@ -2,6 +2,7 @@ package org.wso2.carbon.identity.workflow.engine;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.identity.role.v2.mgt.core.exception.IdentityRoleManagementException;
 import org.wso2.carbon.identity.workflow.engine.dto.PropertyDTO;
 import org.wso2.carbon.identity.workflow.engine.dto.StateDTO;
 import org.wso2.carbon.identity.workflow.engine.dto.TaskDataDTO;
@@ -9,6 +10,7 @@ import org.wso2.carbon.identity.workflow.engine.dto.TaskSummaryDTO;
 import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineClientException;
 import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineException;
 import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineServerException;
+import org.wso2.carbon.identity.workflow.engine.internal.WorkflowEngineServiceDataHolder;
 import org.wso2.carbon.identity.workflow.engine.internal.dao.WorkflowEventRequestDAO;
 import org.wso2.carbon.identity.workflow.engine.internal.dao.impl.WorkflowEventRequestDAOImpl;
 import org.wso2.carbon.identity.workflow.engine.model.PagePagination;
@@ -17,8 +19,6 @@ import org.wso2.carbon.identity.workflow.engine.model.TaskDetails;
 import org.wso2.carbon.identity.workflow.engine.model.TaskModel;
 import org.wso2.carbon.identity.workflow.engine.model.TaskParam;
 import org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants;
-import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
-import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerServiceImpl;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementServiceImpl;
 import org.wso2.carbon.identity.workflow.mgt.bean.Parameter;
@@ -26,9 +26,11 @@ import org.wso2.carbon.identity.workflow.mgt.bean.RequestParameter;
 import org.wso2.carbon.identity.workflow.mgt.bean.WorkflowAssociation;
 import org.wso2.carbon.identity.workflow.mgt.callback.WSWorkflowCallBackService;
 import org.wso2.carbon.identity.workflow.mgt.callback.WSWorkflowResponse;
+import org.wso2.carbon.identity.workflow.mgt.dao.WorkflowRequestDAO;
 import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 import org.wso2.carbon.identity.workflow.mgt.exception.InternalWorkflowException;
 import org.wso2.carbon.identity.workflow.mgt.exception.WorkflowException;
+import org.wso2.carbon.utils.UserUtils.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -122,8 +124,7 @@ public class ApprovalEventService {
                 calendar.setTimeInMillis(createdTime.getTime());
                 long cal = calendar.getTimeInMillis();
                 setCreatedTime(cal);
-                summeryDTO.setId(taskId.concat(" " + workflowName).concat(WorkflowEngineConstants.ParameterName.
-                        ENTITY_NAME + entityNameOfRequest));
+                summeryDTO.setId(taskId);
                 summeryDTO.setName(WorkflowEngineConstants.ParameterName.APPROVAL_TASK);
                 summeryDTO.setTaskType(eventType);
                 summeryDTO.setPresentationName(taskDetails.getTaskSubject());
@@ -141,7 +142,8 @@ public class ApprovalEventService {
 
         String userName = CarbonContext.getThreadLocalCarbonContext().getUsername();
         WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
-        List<String> roleNames = getRoleNamesFromUser(userName);
+        String userId = CarbonContext.getThreadLocalCarbonContext().getUserId();
+        List<String> roleNames = getRoleNamesFromUser(userId);
         List<String> roleRequestsList;
         List<String> lst = new ArrayList<>();
         for (String roleName : roleNames) {
@@ -152,6 +154,10 @@ public class ApprovalEventService {
                 lst.addAll(roleRequestsList);
             } else if (newName[0].equals(WorkflowEngineConstants.ParameterName.SYSTEM_USER)) {
                 String newRoleName = WorkflowEngineConstants.ParameterName.SYSTEM_PRIMARY_USER.concat(names[0]);
+                roleRequestsList = workflowEventRequestDAO.getRequestsList(newRoleName);
+                lst.addAll(roleRequestsList);
+            } else if (newName[0].equals(WorkflowEngineConstants.ParameterName.INTERNAL_USER)){
+                String newRoleName = WorkflowEngineConstants.ParameterName.INTERNAL_USER.concat(names[0]);
                 roleRequestsList = workflowEventRequestDAO.getRequestsList(newRoleName);
                 lst.addAll(roleRequestsList);
             } else {
@@ -165,17 +171,24 @@ public class ApprovalEventService {
         return Stream.concat(lst.stream(), userRequestList.stream()).collect(Collectors.toList());
     }
 
-    private List<String> getRoleNamesFromUser(String approverName) {
+    private List<String> getRoleNamesFromUser(String approverId) {
 
-        WorkflowEventRequestDAO workflowEventRequestDAO = new WorkflowEventRequestDAOImpl();
-        List<Integer> roleIDList = workflowEventRequestDAO.getRolesID(approverName);
-        List<String> roleNameList;
-        List<String> lst = new ArrayList<>();
-        for (Integer roleId : roleIDList) {
-            roleNameList = workflowEventRequestDAO.getRoleNames(roleId);
-            lst.addAll(roleNameList);
+        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        List<String> roleIDList;
+        try{
+            roleIDList = WorkflowEngineServiceDataHolder.getInstance().getRoleManagementService().getRoleIdListOfUser(approverId, tenantDomain);
+            String roleName;
+            List<String> roleNameList = new ArrayList<>();
+            for (String roleId : roleIDList) {
+                roleName = WorkflowEngineServiceDataHolder.getInstance().getRoleManagementService().getRoleNameByRoleId(roleId, tenantDomain);
+                roleNameList.add(roleName);
+            }
+            return new ArrayList<>(roleNameList);
+
+        } catch (IdentityRoleManagementException e) {
+            throw new RuntimeException(e);
         }
-        return new ArrayList<>(lst);
+
     }
 
     private String getTaskRelatedStatus(String requestId, List<String> status) {
@@ -324,10 +337,10 @@ public class ApprovalEventService {
 
     private WorkflowRequest getWorkflowRequest(String requestId) {
 
-        WorkflowExecutorManagerService workFlowExecutorManagerService = new WorkflowExecutorManagerServiceImpl();
+        WorkflowRequestDAO requestDAO = new WorkflowRequestDAO();
         WorkflowRequest request;
         try {
-            request = workFlowExecutorManagerService.retrieveWorkflow(requestId);
+            request = requestDAO.retrieveWorkflow(requestId);
         } catch (InternalWorkflowException e) {
             throw new WorkflowEngineException(
                     WorkflowEngineConstants.ErrorMessages.ERROR_OCCURRED_WHILE_RETRIEVING_WORKFLOW_REQUEST.getCode(),

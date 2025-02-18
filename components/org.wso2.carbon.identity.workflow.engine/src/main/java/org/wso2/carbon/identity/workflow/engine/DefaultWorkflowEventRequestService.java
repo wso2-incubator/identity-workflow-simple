@@ -8,14 +8,13 @@ import org.wso2.carbon.identity.workflow.engine.exception.WorkflowEngineServerEx
 import org.wso2.carbon.identity.workflow.engine.internal.dao.WorkflowEventRequestDAO;
 import org.wso2.carbon.identity.workflow.engine.internal.dao.impl.WorkflowEventRequestDAOImpl;
 import org.wso2.carbon.identity.workflow.engine.util.WorkflowEngineConstants;
-import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerService;
-import org.wso2.carbon.identity.workflow.mgt.WorkflowExecutorManagerServiceImpl;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementService;
 import org.wso2.carbon.identity.workflow.mgt.WorkflowManagementServiceImpl;
 import org.wso2.carbon.identity.workflow.mgt.bean.Parameter;
 import org.wso2.carbon.identity.workflow.mgt.bean.RequestParameter;
 import org.wso2.carbon.identity.workflow.mgt.bean.Workflow;
 import org.wso2.carbon.identity.workflow.mgt.bean.WorkflowAssociation;
+import org.wso2.carbon.identity.workflow.mgt.dao.WorkflowRequestAssociationDAO;
 import org.wso2.carbon.identity.workflow.mgt.dto.WorkflowRequest;
 import org.wso2.carbon.identity.workflow.mgt.exception.InternalWorkflowException;
 import org.wso2.carbon.identity.workflow.mgt.exception.WorkflowException;
@@ -60,9 +59,9 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
                             String[] approvers = approver.split(",", 0);
                             for (String name : approvers) {
                                 approverName = name;
-                                String taskStatus= WorkflowEngineConstants.ParameterName.TASK_STATUS_DEFAULT;
+                                String taskStatus = WorkflowEngineConstants.ParameterName.TASK_STATUS_DEFAULT;
                                 workflowEventRequestDAO.addApproversOfRequest(taskId, eventId, workflowId,
-                                        approverType, approverName,taskStatus);
+                                        approverType, approverName, taskStatus);
                             }
                         }
                     }
@@ -111,15 +110,13 @@ public class DefaultWorkflowEventRequestService implements DefaultWorkflowEventR
     @Override
     public List<WorkflowAssociation> getAssociations(WorkflowRequest workflowRequest) {
 
-        List<WorkflowAssociation> associations;
-        WorkflowExecutorManagerService workFlowExecutorManagerService = new WorkflowExecutorManagerServiceImpl();
+        List<WorkflowAssociation> associations = null;
+        WorkflowRequestAssociationDAO requestAssociationDAO = new WorkflowRequestAssociationDAO();
         try {
-            associations = workFlowExecutorManagerService.getWorkflowAssociationsForRequest(
+            associations = requestAssociationDAO.getWorkflowAssociationsForRequest(
                     workflowRequest.getEventType(), workflowRequest.getTenantId());
         } catch (InternalWorkflowException e) {
-            throw new WorkflowEngineClientException(
-                    WorkflowEngineConstants.ErrorMessages.ASSOCIATION_NOT_FOUND.getCode(),
-                    WorkflowEngineConstants.ErrorMessages.ASSOCIATION_NOT_FOUND.getDescription());
+            //
         }
         return associations;
     }
